@@ -172,9 +172,8 @@ class CLIterApp : public CLApp {
 
 class CLPageRank : public CLApp {
   int max_iters_;
-  int threads_custom_;
   double tolerance_;
-
+  int threads_custom_;
  public:
   CLPageRank(int argc, char** argv, std::string name, double tolerance,
              int max_iters, int threads_custom) :
