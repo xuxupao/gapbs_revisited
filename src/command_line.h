@@ -198,6 +198,23 @@ class CLPageRank : public CLApp {
   int threads_custom() const { return threads_custom_; }
 };
 
+class CLTriangleCounting : public CLApp {
+  int threads_custom_;
+ public:
+  CLPageRank(int argc, char** argv, std::string name, int threads_custom) :
+    CLApp(argc, argv, name), threads_custom_(threads_custom) {
+    get_args_ += "c:";
+  }
+
+  void HandleArg(signed char opt, char* opt_arg) override {
+    switch (opt) {
+      case 'c': threads_custom_ = atoi(opt_arg);          break;
+      default: CLApp::HandleArg(opt, opt_arg);
+    }
+  }
+  int threads_custom() const { return threads_custom_; }
+};
+
 
 
 template<typename WeightT_>
