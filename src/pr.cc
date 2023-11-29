@@ -32,7 +32,7 @@ const float kDamp = 0.85;
 
 
 pvector<ScoreT> PageRankPullGS(const Graph &g, int max_iters, double epsilon=0,
-                               bool logging_enabled = false) {
+                               bool logging_enabled = false, int chunk_size) {
   const ScoreT init_score = 1.0f / g.num_nodes();
   const ScoreT base_score = (1.0f - kDamp) / g.num_nodes();
   pvector<ScoreT> scores(g.num_nodes(), init_score);
@@ -42,7 +42,7 @@ pvector<ScoreT> PageRankPullGS(const Graph &g, int max_iters, double epsilon=0,
     outgoing_contrib[n] = init_score / g.out_degree(n);
   for (int iter=0; iter < max_iters; iter++) {
     double error = 0;
-    #pragma omp parallel for reduction(+ : error) schedule(dynamic, 32768) //default = 16384
+    #pragma omp parallel for reduction(+ : error) schedule(dynamic, chunk_size) //default = 16384
     for (NodeID u=0; u < g.num_nodes(); u++) {
       ScoreT incoming_total = 0;
       for (NodeID v : g.in_neigh(u))
@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
   Builder b(cli);
   Graph g = b.MakeGraph();
   auto PRBound = [&cli] (const Graph &g) {
-    return PageRankPullGS(g, cli.max_iters(), cli.tolerance(), cli.logging_en());
+    return PageRankPullGS(g, cli.max_iters(), cli.tolerance(), cli.logging_en(), cli.threads_custom());
   };
   auto VerifierBound = [&cli] (const Graph &g, const pvector<ScoreT> &scores) {
     return PRVerifier(g, scores, cli.tolerance());
