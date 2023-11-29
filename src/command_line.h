@@ -172,13 +172,14 @@ class CLIterApp : public CLApp {
 
 class CLPageRank : public CLApp {
   int max_iters_;
+  int threads_custom_;
   double tolerance_;
 
  public:
   CLPageRank(int argc, char** argv, std::string name, double tolerance,
-             int max_iters) :
-    CLApp(argc, argv, name), max_iters_(max_iters), tolerance_(tolerance) {
-    get_args_ += "i:t:";
+             int max_iters, int threads_custom) :
+    CLApp(argc, argv, name), max_iters_(max_iters), tolerance_(tolerance), threads_custom_(threads_custom) {
+    get_args_ += "i:t:c:";
     AddHelpLine('i', "i", "perform at most i iterations",
                 std::to_string(max_iters_));
     AddHelpLine('t', "t", "use tolerance t", std::to_string(tolerance_));
@@ -188,12 +189,14 @@ class CLPageRank : public CLApp {
     switch (opt) {
       case 'i': max_iters_ = atoi(opt_arg);            break;
       case 't': tolerance_ = std::stod(opt_arg);            break;
+      case 'c': threads_custom_ = atoi(opt_arg);          break;
       default: CLApp::HandleArg(opt, opt_arg);
     }
   }
 
   int max_iters() const { return max_iters_; }
   double tolerance() const { return tolerance_; }
+  int threads_custom() const { return threads_custom_; }
 };
 
 
