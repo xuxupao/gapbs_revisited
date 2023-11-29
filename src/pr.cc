@@ -32,7 +32,7 @@ const float kDamp = 0.85;
 
 
 pvector<ScoreT> PageRankPullGS(const Graph &g, int max_iters, double epsilon=0,
-                               bool logging_enabled = false, int chunk_size) {
+                               bool logging_enabled = false, int chunk_size = 16384) {
   const ScoreT init_score = 1.0f / g.num_nodes();
   const ScoreT base_score = (1.0f - kDamp) / g.num_nodes();
   pvector<ScoreT> scores(g.num_nodes(), init_score);
