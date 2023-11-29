@@ -95,7 +95,7 @@ bool PRVerifier(const Graph &g, const pvector<ScoreT> &scores,
 
 
 int main(int argc, char* argv[]) {
-  CLPageRank cli(argc, argv, "pagerank", 1e-4, 20);
+  CLPageRank cli(argc, argv, "pagerank", 1e-4, 20, 16384);
   if (!cli.ParseArgs())
     return -1;
   Builder b(cli);
